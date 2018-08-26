@@ -22,10 +22,10 @@
 #define HEROPH_TAG 16
 
 //layout
-#define BG_LAYOUT 0
-#define HERO_LAYOUT 2
-#define BULLET_LAYOUT 3
-#define ENEMY_LAYOUT 1
+#define BG_LAYOUT -1
+#define HERO_LAYOUT 0
+#define BULLET_LAYOUT 1
+#define ENEMY_LAYOUT 2
 #define UI_LAYOUT 4
 
 //HP

@@ -2,14 +2,7 @@
 #include "CommonData.h"
 #include "OverScene.h"
 
-float Enemy::levelSpeed =  0;
-
-Enemy::Enemy() {
-    this->e_type = SMALL_ENEMY; 
-    this->e_hp = HP_SMALL;
-	this->e_step = SP_SMALL;
-	this->e_score = SCORE_SMALL;
-}
+float Enemy::e_LevelSpeed =  0;
 
 Enemy* Enemy::create(EnemyType type) {
     auto enemy = new Enemy();
@@ -24,25 +17,25 @@ Enemy* Enemy::create(EnemyType type) {
 
 //根据不同的敌机建立不同的图片效果
 bool Enemy::init(EnemyType type) {
-    this->e_type = type;
+    e_type = type;
     switch (type)
     {
     case  SMALL_ENEMY:
-        this->e_hp = HP_SMALL;
-        this->e_step = SP_SMALL;      
-		this->e_score = SCORE_SMALL;
+        e_hp = HP_SMALL;
+       e_speed = SP_SMALL;      
+		e_score = SCORE_SMALL;
         cocos2d::Sprite::initWithSpriteFrameName("enemy1.png");
         break;
     case  MIDDLE_ENEMY:
-        this->e_hp = HP_MIDDLE;
-        this->e_step = SP_MIDDLE;
-		this->e_score = SCORE_MIDDLE;
+        e_hp = HP_MIDDLE;
+       e_speed = SP_MIDDLE;
+		e_score = SCORE_MIDDLE;
         cocos2d::Sprite::initWithSpriteFrameName("enemy2.png");
         break;
     case  BIG_ENEMY:
-        this->e_hp = HP_BIG;
-        this->e_step = SP_BIG;
-		this->e_score = SCORE_BIG;
+        e_hp = HP_BIG;
+       e_speed = SP_BIG;
+		e_score = SCORE_BIG;
 		cocos2d::Sprite::initWithSpriteFrameName("enemy3_n1.png");
 		{
 			auto animation = AnimationCacheInstance->getAnimation("Big Enemy Fly");
@@ -57,7 +50,7 @@ bool Enemy::init(EnemyType type) {
 }
 
 //打击效果
-void Enemy::hit() { 
+void Enemy::hitAnim() { 
     auto animation = cocos2d::Animation::create();
     switch (this->e_type)
     {
@@ -75,7 +68,7 @@ void Enemy::hit() {
 }   
 
 //摧毁效果
-void Enemy::down() {
+void Enemy::destroyedAnim() {
     auto animation = cocos2d::Animation::create();
     switch(this->e_type) {
     case SMALL_ENEMY:       
@@ -98,17 +91,18 @@ void Enemy::down() {
 		node->removeFromParentAndCleanup(true);
     });
 
-   this->runAction(cocos2d::Sequence::create(animate, callFuncN, NULL));
+   (isDestroyed())?runAction(cocos2d::Sequence::create(animate, callFuncN, NULL))
+	   :runAction(animate);
 }
 
-void Enemy::increeLevelSpeed(){
-	if(Enemy::levelSpeed == 10)
+void Enemy::increeLevelSpeed(int multi){
+	if(Enemy::e_LevelSpeed >= 10)
 	{
 		return;
 	}
-	Enemy::levelSpeed += 0.4f;
+	Enemy::e_LevelSpeed += 0.4f*multi;
 }
 
 void Enemy::clearLevelSpeed(){
-	Enemy::levelSpeed = 0; 
+	Enemy::e_LevelSpeed = 0; 
 }

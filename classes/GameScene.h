@@ -11,35 +11,25 @@ USING_NS_CC;
 class GameScene:public Layer {
 public:
 	GameScene();
-	//CREATE_FUNC(GameScene);
 	static Scene* createScene();
 	static GameScene* create();
 	bool init();
-	
-	//定时器函数必须是void返回类型，必须有一个float类型的参数，刷新图片必用
 	void update(float dt);
 
 private:
-	//the score
 	int m_score;
-	//cocos2d::Point m_vec;
 	int m_doubleBulletCount;
 	int m_triBulletCount;
 	int m_BombCount;
-
-	//英雄子弹集合
 	Vector<Bullet*> h_bullets;
 	Vector<Bullet*> removableBullets;
-	//创建子弹
 	void createBullet(float); 	
 	void createSingleBullet();
 	void createDoubleBullet();
 	void createTriBullet();
 
-	//敌机集合
     Vector<Enemy*> h_enemies; 
 	Vector<Enemy*> removableEnemies;
-    //创建敌机
     void createSmallEnemy(float);
     void createMiddleEnemy(float);
     void createBigEnemy(float);

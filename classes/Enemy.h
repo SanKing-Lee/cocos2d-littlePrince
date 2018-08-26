@@ -13,33 +13,43 @@ typedef enum
 
 class Enemy : public cocos2d::Sprite {
 public:
-    Enemy();
+
     static Enemy* create(EnemyType);
     bool init(EnemyType);
 
-    //碰撞
-    void hit();
-    //摧毁
-    void down();
+    void hitAnim();
+    void destroyedAnim();
 
+	//type visitor
 	EnemyType getType(){return e_type;};
+	void setType(EnemyType type){ e_type = type;};
 
-	float getStep(){return e_step + levelSpeed;}
+	//speed visitor
+	float getSpeed(){return e_speed + e_LevelSpeed;}
+	void setSpeed(float sp){ e_speed = sp;};
 
+	//hp visitor
 	int getHP(){return e_hp;}
 	void setHP(int hp){e_hp = hp;}
+
+	//score visitor
 	int getScore(){return e_score;}
-	static void increeLevelSpeed();
+	void setScore(int score){e_score = score;};
+
+	//
+	bool isDestroyed() { return e_hp <= 0; };
+
+	static void increeLevelSpeed(int);
 	static void clearLevelSpeed();
-	void fly();
+
 private:
     EnemyType e_type;
     //敌机移动速度
-    float e_step;
+    float e_speed;
     //敌机血量
     int e_hp;   
 	//score
 	int e_score;
-	static float levelSpeed;
+	static float e_LevelSpeed;
 };
 #endif

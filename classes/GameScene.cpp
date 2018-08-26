@@ -229,7 +229,7 @@ void GameScene::bomb(Ref* ref){
 		return;
 	for(auto enemy:this->h_enemies)
 	{
-		enemy->down();
+		enemy->destroyedAnim();
 		m_score += enemy->getScore();
 	}
 	h_enemies.clear();
@@ -431,7 +431,7 @@ void GameScene::flyBullets(){
 void GameScene::flyEnemys(){
 	//fly the enemies
 	for(auto enemy:h_enemies){
-        enemy->setPositionY(enemy->getPositionY() - enemy->getStep());
+        enemy->setPositionY(enemy->getPositionY() - enemy->getSpeed());
         //clean
         if(enemy->getPositionY() + enemy->getContentSize().height/2 <= 0) { 
             this->removeChild(enemy);
@@ -484,7 +484,7 @@ void GameScene::crashEnemyAndHeroAndBullet(){
         }       
 		//hit
         if(isDown) {
-            (enemy)->hit();
+            (enemy)->hitAnim();
 			//get hurt
             (enemy)->setHP((enemy)->getHP()-1); 
 			//destroyed
@@ -493,12 +493,9 @@ void GameScene::crashEnemyAndHeroAndBullet(){
 				m_score += (enemy)->getScore();
 				//display the socre
 				sl->setString(StringUtils::format("%d", m_score));
-                (enemy)->down();    
+                (enemy)->destroyedAnim();    
 				removableEnemies.pushBack(enemy);
-				if(!this->m_score%2000)
-				{
-					Enemy::increeLevelSpeed();
-				}
+				Enemy::increeLevelSpeed((int)(m_score / 2000));
             }
         } 
     }
