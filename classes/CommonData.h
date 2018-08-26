@@ -40,6 +40,7 @@
 #define SP_BIG 0.5f
 #define SP_BULLET 12
 #define SP_BG 2
+#define BULLETS_SPEED				5
 
 
 //delay
@@ -52,9 +53,9 @@
 #define SL_YOFF 20
 
 //score
-#define SCORE_SMALL 100
-#define SCORE_MIDDLE 1000
-#define SCORE_BIG 5000
+#define SCORE_SMALL 10
+#define SCORE_MIDDLE 100
+#define SCORE_BIG 500
 
 //create interval
 #define BULLET_INTERVAL 0.1f
@@ -78,3 +79,17 @@
 
 #define MAX_RANK 8
 #define PROPTYPENUMBER 3
+
+//hero
+#define HERO_ONE_HP 3
+
+//attack
+#define	BULLET1_ATTACK				1
+#define BULLET2_ATTACK				2
+#define BOMB_ATTACK					20
+#define HERO_HIT_ATTACK				50
+
+#include <cocos2d.h>
+#include <SimpleAudioEngine.h>
+
+USING_NS_CC;

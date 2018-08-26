@@ -19,14 +19,14 @@ public:
 private:
 	int m_score;
 	int m_doubleBulletCount;
-	int m_triBulletCount;
+	int m_multiBulletCount;
 	int m_BombCount;
 	Vector<Bullet*> h_bullets;
 	Vector<Bullet*> removableBullets;
 	void createBullet(float); 	
 	void createSingleBullet();
 	void createDoubleBullet();
-	void createTriBullet();
+	void createMultiBullet();
 
     Vector<Enemy*> h_enemies; 
 	Vector<Enemy*> removableEnemies;
@@ -45,7 +45,7 @@ private:
 	void createProp(float);
 
 	//create hero
-	void createHero();
+	void createHero(HeroType htype);
 	Vector<Sprite*> hero_hp;
 
 	//create background

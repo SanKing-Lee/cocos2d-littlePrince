@@ -22,7 +22,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
 
 	//glview设置设备尺寸和屏幕拉升解决策略--适应宽度
-	//glview->setFrameSize(480,640);
+	glview->setFrameSize(480,640);
 	glview->setDesignResolutionSize(480,640,ResolutionPolicy::FIXED_WIDTH);
 
 	//FileUtils添加查找资源树

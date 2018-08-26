@@ -6,7 +6,7 @@
 GameScene::GameScene(){
 	m_score = 0;
 	m_doubleBulletCount = 0;
-	m_triBulletCount = 0;
+	m_multiBulletCount = 0;
 	m_BombCount = 0;
 }
 
@@ -67,7 +67,7 @@ bool GameScene::init()
 	createBackground();
 
 	//the hero plane
-	createHero();
+	createHero(HeroOne);
 
 	//score
 	displayScore();
@@ -103,7 +103,7 @@ void GameScene::update(float dt)
 //Bullet
 void GameScene::createBullet(float) {
 	Audio->playEffect("bullet.mp3");
-	(m_triBulletCount > 0)?createTriBullet():
+	(m_multiBulletCount > 0)?createMultiBullet():
 		((m_doubleBulletCount>0)?createDoubleBullet():createSingleBullet());
 }
 
@@ -135,11 +135,11 @@ void GameScene::createDoubleBullet(){
 	m_doubleBulletCount--;
 }
 
-void GameScene::createTriBullet(){
+void GameScene::createMultiBullet(){
 	auto hero = this->getChildByTag(HERO_TAG);
 	createSingleBullet();
 	createDoubleBullet();
-	m_triBulletCount--;
+	m_multiBulletCount--;
 }
 
 
@@ -221,18 +221,23 @@ void GameScene::PauseAndResume(Ref* ref){
 
 //use bomb
 void GameScene::bomb(Ref* ref){
-	CocosDenshion::SimpleAudioEngine::getInstance()
-		->playEffect ("use_bomb.mp3");
 	if(Director::getInstance()->isPaused())
 		return;
 	if(m_BombCount <= 0)
 		return;
 	for(auto enemy:this->h_enemies)
 	{
+		enemy->setHP(enemy->getHP()-BOMB_ATTACK);
 		enemy->destroyedAnim();
-		m_score += enemy->getScore();
+		if(enemy->isDestroyed()){
+			removableEnemies.pushBack(enemy);
+			m_score += enemy->getScore();
+		}
 	}
-	h_enemies.clear();
+	//remove destroyed enemies
+	for(auto enemy:removableEnemies){
+		h_enemies.eraseObject(enemy);
+	}
 	auto lblScore = (Label *)this->getChildByTag(SL_TAG);
 	lblScore->setString(StringUtils::format("%d", m_score));
 
@@ -240,9 +245,9 @@ void GameScene::bomb(Ref* ref){
 	Audio->playEffect("use_bomb.mp3");
 }
 
-void GameScene::createHero(){
+void GameScene::createHero(HeroType htype){
 	auto bg1 = this->getChildByTag(BG1_TAG);
-	auto hero = Hero::create();
+	auto hero = Hero::create(htype);
 	hero->setPositionX(VISIBLE_SIZE.width / 2);
 	hero->setPositionY(VISIBLE_SIZE.height / 6);
 	this->addChild(hero, HERO_LAYOUT, HERO_TAG);
@@ -495,7 +500,7 @@ void GameScene::crashEnemyAndHeroAndBullet(){
 				sl->setString(StringUtils::format("%d", m_score));
                 (enemy)->destroyedAnim();    
 				removableEnemies.pushBack(enemy);
-				Enemy::increeLevelSpeed((int)(m_score / 2000));
+				Enemy::increeLevelSpeed((int)(m_score / 100));
             }
         } 
     }
@@ -518,7 +523,7 @@ void GameScene::crashPropAndHero(){
 			switch(prop->getType()){
 			case Enhance_Bullet:
 				Audio->playEffect("get_double_laser.mp3");
-				(m_doubleBulletCount > 0)?(m_triBulletCount = TRIBULLET_QUANTITY)
+				(m_doubleBulletCount > 0)?(m_multiBulletCount = TRIBULLET_QUANTITY)
 					:(m_doubleBulletCount = DOUBLEBULLET_QUANTITY);
 				break;
 			case Bomb:

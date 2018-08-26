@@ -12,7 +12,7 @@ public:
 	void createAnimationCache();
 	void createFrameCache();
 	void createBackground();
-	void createHero();
+	void createHero(HeroType htype);
 	void createLoadingAnimation();
 private:
 

@@ -2,16 +2,9 @@
 #include "CommonData.h"
 #include "Hero.h"
 
-Hero::Hero(){
-	this->h_hp = 3;
-	this->canMove = true;
-	this->active = true;
-	this->h_vec = cocos2d::Vect::ZERO;
-}
-
-Hero* Hero::create(){
+Hero* Hero::create(HeroType type){
 	auto hero = new Hero();
-	if(hero&& hero->init()){
+	if(hero&& hero->init(type)){
 		hero ->autorelease();
 		return hero;
 	}
@@ -20,10 +13,22 @@ Hero* Hero::create(){
 	return nullptr;
 }
 
-bool Hero::init(){
-	this->cocos2d::Sprite::initWithSpriteFrameName("hero1.png");
+bool Hero::init(HeroType type){
+	h_canMove = true;
+	h_isActive = true;
+	h_vec = Vect::ZERO;
+	h_type = type;
+	switch(type){
+	case HeroOne:
+		this->cocos2d::Sprite::initWithSpriteFrameName("hero1.png");
+		h_hp = HERO_ONE_HP;
+
+		break;
+	default:
+		break;
 	//set the position
 	return true;
+	}
 }
 
 void Hero::fly(){
@@ -38,7 +43,7 @@ void Hero::touchMove(){
 
 	touchListener->onTouchBegan = [=](cocos2d::Touch* touch, cocos2d::Event*) {
 	//if the game is paused
-	if(cocos2d::Director::getInstance()->isPaused() || !canMove){
+	if(cocos2d::Director::getInstance()->isPaused() || !h_canMove){
 		return false;
 	}
 
@@ -55,7 +60,7 @@ void Hero::touchMove(){
 
 	//move
 	touchListener->onTouchMoved = [=](cocos2d::Touch* touch, cocos2d::Event*) {
-		if(!canMove)
+		if(!h_canMove)
 			return;
 		auto desP = touch->getLocation() + this->h_vec;
 		this->setPosition(MAX(minX,MIN(desP.x, maxX)), MAX(minY,MIN(desP.y, maxY)));
@@ -88,7 +93,7 @@ void Hero::rebirthHero(){
 		setActive(true);
 	});
 	auto moveHero = cocos2d::CallFunc::create([=](){
-		canMove = true;
+		h_canMove = true;
 	});
 	auto blin = cocos2d::Blink::create(2, 6);
 	this->runAction(cocos2d::Sequence::create(stopHero, animate, getBack, moveHero, blin, activeHero, nullptr));

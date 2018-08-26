@@ -14,16 +14,18 @@ Bullet* Bullet::create(BulletType type)
 
 bool Bullet::init(BulletType type){
 	b_type  = type;
-	b_speed = 0.0;
-	b_attack = 0;
 	switch(type)
 	{
 	case SingleBullet:
-		cocos2d::Sprite::initWithSpriteFrameName ("bullet1.png");
-
+		Sprite::initWithSpriteFrameName ("bullet1.png");
+		b_attack = BULLET1_ATTACK;
+		b_speed = BULLETS_SPEED;
 		break;
 	case DoubleBullet:
-		cocos2d::Sprite::initWithSpriteFrameName("bullet2.png");
+	case MultiBullet:
+		Sprite::initWithSpriteFrameName("bullet2.png");
+		b_attack = BULLET2_ATTACK;
+		b_speed = BULLETS_SPEED;
 		break;
 	default:
 		break;

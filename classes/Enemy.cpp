@@ -100,7 +100,7 @@ void Enemy::increeLevelSpeed(int multi){
 	{
 		return;
 	}
-	Enemy::e_LevelSpeed += 0.4f*multi;
+	Enemy::e_LevelSpeed += 0.01f*multi;
 }
 
 void Enemy::clearLevelSpeed(){

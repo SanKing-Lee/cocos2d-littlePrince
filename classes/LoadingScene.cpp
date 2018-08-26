@@ -53,7 +53,7 @@ bool LoadingScene::init(){
 	createBackground();
 
 	//the hero plane
-	createHero();
+	createHero(HeroOne);
 
 	//loading animation
 	createLoadingAnimation();
@@ -172,9 +172,9 @@ void LoadingScene::createBackground(){
 	this->addChild(bg1, BG_LAYOUT, BG1_TAG);
 }
 
-void LoadingScene::createHero(){
+void LoadingScene::createHero(HeroType htype){
 	auto bg1 = this->getChildByTag(BG1_TAG);
-	auto hero = Hero::create();
+	auto hero = Hero::create(htype);
 	hero->setPositionX( VISIBLE_SIZE.width / 2);
 	hero->setPositionY(VISIBLE_SIZE.height / 6);
 	hero->fly(); 
