@@ -14,6 +14,7 @@ private:
 	int h_hp;
 	bool h_canMove;
 	bool h_isActive;
+	bool h_isAlive;
 	cocos2d::Point h_vec;
 public:
 	static Hero* create(HeroType type);
@@ -26,6 +27,10 @@ public:
 	void setActive(bool isActive){h_isActive = isActive;};
 	void setMove(bool move){h_canMove = move;};
 	bool getActive(){return h_isActive;};
+
+	bool getAlive(){return h_isAlive;};
+	void setAlive(bool ali){h_isAlive = ali;};
 	void rebirthHero();
+
 	//void displayPH();
 };

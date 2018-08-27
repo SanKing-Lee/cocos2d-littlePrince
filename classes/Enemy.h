@@ -2,6 +2,7 @@
 #define __ENEMY_H__
 #include "cocos2d.h"
 #include <SimpleAudioEngine.h>
+#include "Prop.h"
 
 //敌机类型
 typedef enum 
@@ -18,7 +19,7 @@ public:
     bool init(EnemyType);
 
     void hitAnim();
-    void destroyedAnim();
+    void destroyedAnim(int);
 
 	//type visitor
 	EnemyType getType(){return e_type;};
@@ -44,12 +45,15 @@ public:
 
 private:
     EnemyType e_type;
-    //敌机移动速度
+
     float e_speed;
-    //敌机血量
+
+
     int e_hp;   
 	//score
 	int e_score;
+	//the prop that enemy catch
+	PropType e_prop;
 	static float e_LevelSpeed;
 };
 #endif

@@ -68,7 +68,7 @@ void Enemy::hitAnim() {
 }   
 
 //´Ý»ÙÐ§¹û
-void Enemy::destroyedAnim() {
+void Enemy::destroyedAnim(int multi) {
     auto animation = cocos2d::Animation::create();
     switch(this->e_type) {
     case SMALL_ENEMY:       
@@ -87,13 +87,15 @@ void Enemy::destroyedAnim() {
         break;
     }
     auto animate = cocos2d::Animate::create(animation);
-    auto callFuncN = cocos2d::CallFuncN::create([](Node* node) {
+    auto callFuncN = cocos2d::CallFuncN::create([=](Node* node) {
 		node->removeFromParentAndCleanup(true);
+		increeLevelSpeed(multi);
     });
 
    (isDestroyed())?runAction(cocos2d::Sequence::create(animate, callFuncN, NULL))
 	   :runAction(animate);
 }
+
 
 void Enemy::increeLevelSpeed(int multi){
 	if(Enemy::e_LevelSpeed >= 10)

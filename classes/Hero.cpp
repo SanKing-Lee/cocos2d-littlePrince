@@ -18,6 +18,7 @@ bool Hero::init(HeroType type){
 	h_isActive = true;
 	h_vec = Vect::ZERO;
 	h_type = type;
+	h_isAlive = true;
 	switch(type){
 	case HeroOne:
 		this->cocos2d::Sprite::initWithSpriteFrameName("hero1.png");
@@ -82,6 +83,7 @@ void Hero::rebirthHero(){
 	auto stopHero = cocos2d::CallFunc::create([=](){
 		setActive(false);
 		setMove(false);
+		h_isAlive = false;
 	});
 	auto animation = AnimationCacheInstance->getAnimation("Hero Down");
 	auto animate = cocos2d::Animate::create(animation);
@@ -94,6 +96,7 @@ void Hero::rebirthHero(){
 	});
 	auto moveHero = cocos2d::CallFunc::create([=](){
 		h_canMove = true;
+		h_isAlive = true;
 	});
 	auto blin = cocos2d::Blink::create(2, 6);
 	this->runAction(cocos2d::Sequence::create(stopHero, animate, getBack, moveHero, blin, activeHero, nullptr));

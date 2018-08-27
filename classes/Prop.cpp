@@ -19,13 +19,22 @@ bool Prop::init(PropType type){
 	p_type = type;
 	switch(type){
 	case  Enhance_Bullet:
-		cocos2d::Sprite::initWithSpriteFrameName("ufo1.png");
+		Sprite::initWithSpriteFrameName("ufo1.png");
 		break;
 	case Bomb:
-		cocos2d::Sprite::initWithSpriteFrameName("ufo2.png");
+		Sprite::initWithSpriteFrameName("ufo2.png");
 		break;
 	case Hp:
-		cocos2d::Sprite::initWithFile("propHP.png");
+		Sprite::initWithFile("propHP.png");
+		break;
+	case Gold:
+		Sprite::initWithFile("CloseNormal.png");
+		break;
+	case ProtectCover:
+		Sprite::initWithFile("CloseSelected.png");
+		break;
+	case SpeedDown:
+		Sprite::initWithFile("Rank.png");
 		break;
 	default:
 		break;

@@ -1,8 +1,11 @@
 #pragma once
 #include <cocos2d.h>
 typedef enum{
+	Gold,
+	SpeedDown,
 	Enhance_Bullet,
 	Bomb,
+	ProtectCover,
 	Hp
 }PropType;
 

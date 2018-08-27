@@ -20,6 +20,7 @@
 #define RANKMENU_TAG 14
 #define RANKNAME_TAG 15
 #define HEROPH_TAG 16
+#define COVER_TAG 17
 
 //layout
 #define BG_LAYOUT -1
@@ -42,11 +43,14 @@
 #define SP_BG 2
 #define BULLETS_SPEED				5
 
+#define	ENEMY_SPEED_DOWN_MULTI 0.5
+#define LEVEL_SCORE 200
 
 //delay
 #define HIT_DELAY 0.2f
 #define DOWN_DELAY 0.1f
 #define HERO_DOWN_DELAY 0.2f
+#define ENEMY_SPEED_REGAIN_DELAY 2
 
 //score lable off
 #define SL_XOFF 20
@@ -78,7 +82,7 @@
 #define TRIBULLET_QUANTITY 30
 
 #define MAX_RANK 8
-#define PROPTYPENUMBER 3
+#define PROPTYPENUMBER 6
 
 //hero
 #define HERO_ONE_HP 3

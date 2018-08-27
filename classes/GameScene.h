@@ -17,53 +17,89 @@ public:
 	void update(float dt);
 
 private:
+	//member vraibles
+	//score
 	int m_score;
+	//the number of double-bullets
 	int m_doubleBulletCount;
+	//the number of multi-bullets
 	int m_multiBulletCount;
+	//the number of bombs
 	int m_BombCount;
-	Vector<Bullet*> h_bullets;
+	//whether down enemy speed
+	bool m_isEnemeySpeedDown;
+	float m_EnemySpeedMulti;
+	bool m_isProtected;
+
+
+	//bullet
+	//sum of bulltes created
+	Vector<Bullet*> g_bullets;
+	//sum of bulltes to be removed
 	Vector<Bullet*> removableBullets;
 	void createBullet(float); 	
 	void createSingleBullet();
 	void createDoubleBullet();
 	void createMultiBullet();
 
-    Vector<Enemy*> h_enemies; 
+	//enemy
+    Vector<Enemy*> g_enemies; 
 	Vector<Enemy*> removableEnemies;
     void createSmallEnemy(float);
     void createMiddleEnemy(float);
     void createBigEnemy(float);
     void createEnemy(EnemyType);
 
-	void menuCloseCallback(Ref* pSender);
-	void PauseAndResume(Ref* ref);
-	void bomb(Ref* ref);
-
 	//create prop
 	Vector<Prop*> h_props;
+	//props enemy carry
 	Vector<Prop*> removableProps;
-	void createProp(float);
+	void createEnemyProp(PropType type, Point pos);
+	void createPropwithSchedule(float);
+	void createPropwhenEnemyDestroyed(Enemy* enemy);
 
 	//create hero
 	void createHero(HeroType htype);
 	Vector<Sprite*> hero_hp;
 
-	//create background
+	//create all the sprites above with schedule
+	void createSprites();
+
+	//Callback funcations
+	void menuCloseCallback(Ref* pSender);
+	void PauseAndResume(Ref* ref);
+	void bomb(Ref* ref);
+
+	//create layout
 	void createBackground();
 	void createFameCache();
-	void playBackgroundMusic();
 	void createMenu_PauseAndResume();
+	void playBackgroundMusic();
+
+	void createHeroHP();
+
 	void displayBombs();
 	void displayScore();
+
 	void updateHeroHP();
-	void createSprites();
-	void createHeroHP();
 	void updateBomb();
 
-	//
+	//enemy speed down
+	void downEnemySpeed();
+	void regainEnemySpeed(float);
+
+	//hero protect cover
+	void createProtect();
+	void vanishProtect(float);
+	void updateProtect();
+
+	//animation
 	void moveBackground();
 	void flyBullets();
 	void flyEnemys();
+	void flyEnemyProp();
+
+	//crash check
 	void crashEnemyAndHeroAndBullet();
 	void crashPropAndHero();
 };
