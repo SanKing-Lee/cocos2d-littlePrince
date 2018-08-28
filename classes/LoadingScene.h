@@ -8,6 +8,7 @@ public:
 	static cocos2d::Scene* createScene();
 	static LoadingScene* create();
 	bool init();
+	static void initData();
 	void preloadMusic();
 	void createAnimationCache();
 	void createFrameCache();

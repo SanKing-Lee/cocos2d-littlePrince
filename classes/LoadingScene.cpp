@@ -2,6 +2,7 @@
 #include "CommonData.h"
 #include "GameScene.h"
 #include <SimpleAudioEngine.h>
+#include <cstring>
 
 USING_NS_CC;
 
@@ -43,6 +44,9 @@ bool LoadingScene::init(){
 	//preload backgroundmusic and effect
 	preloadMusic();
 
+	//
+	initData();
+
 	//frame cache
 	createFrameCache();
 
@@ -58,6 +62,17 @@ bool LoadingScene::init(){
 	//loading animation
 	createLoadingAnimation();
 	return true;
+}
+
+void LoadingScene::initData(){
+	UserDefaultInstance->setBoolForKey("isExist", true);
+	UserDefaultInstance->setIntegerForKey("Score", 0);
+	UserDefaultInstance->setIntegerForKey("Gold", 0);
+	UserDefaultInstance->setIntegerForKey("HeroHP", 3);
+	UserDefaultInstance->setIntegerForKey("HeroHPLimit", 3);
+	UserDefaultInstance->setIntegerForKey("Bomb", 0);
+	UserDefaultInstance->setIntegerForKey("HeroLevel", 1);
+	UserDefaultInstance->setBoolForKey("ProtectCover", false);
 }
 
 void LoadingScene::preloadMusic(){
@@ -76,12 +91,17 @@ void LoadingScene::preloadMusic(){
 	audio->preloadEffect("use_bomb.mp3");
 }
 
+void LoadingScene::createFrameCache(){
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("shoot.plist");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("shoot_background.plist");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("level_list.plist");
+}
+
 void LoadingScene::createAnimationCache(){
 	//hero fly
 	auto heroFly = Animation::create();
 	heroFly->addSpriteFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("hero1.png"));
 	heroFly->addSpriteFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("hero2.png"));
-
 	heroFly->setDelayPerUnit(0.1f);
 	heroFly->setLoops(-1);	
 	AnimationCacheInstance->addAnimation(heroFly, "Hero Fly");
@@ -157,12 +177,19 @@ void LoadingScene::createAnimationCache(){
     }   
 	bigEnemyDown->setDelayPerUnit(DOWN_DELAY);
 	AnimationCacheInstance->addAnimation(bigEnemyDown, "Big Enemy Down");
+
+	//Rank Star blink
+	auto starTwinkling = Animation::create();
+	for(int i = 0; i < 7; i ++){
+            auto png = StringUtils::format("star%d.png", i+1);
+            starTwinkling->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(png));
+	}
+	starTwinkling->setDelayPerUnit(STAR_TWINKLE_DELAY);
+	starTwinkling->setLoops(-1);	
+	AnimationCacheInstance->addAnimation(starTwinkling, "star twinkle");
 }
 
-void LoadingScene::createFrameCache(){
-	cocos2d::SpriteFrameCache::getInstance()->addSpriteFramesWithFile("shoot.plist");
-	cocos2d::SpriteFrameCache::getInstance()->addSpriteFramesWithFile("shoot_background.plist");
-}
+
 
 void LoadingScene::createBackground(){
 	//the first background picture

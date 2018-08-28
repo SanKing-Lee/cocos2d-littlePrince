@@ -14,6 +14,6 @@ public:
 	bool init();
 	void readScore();
 	void createBackground();
-	void createMenu_Restart();
+	void createMenu_Back2Over();
 	void displayRank();
 };

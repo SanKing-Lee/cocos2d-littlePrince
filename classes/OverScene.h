@@ -1,23 +1,23 @@
 #pragma once
 
 #include <cocos2d.h>
-#include <fstream>
 #include <string>
 #include <vector>
 #include <algorithm>
+#include "LoadingScene.h"
 
 class OverScene: public cocos2d::Layer{
 public:
-	OverScene(int score);
-	static cocos2d::Scene* createScene(int score);
-	static OverScene* create(int score);
-	static cocos2d::Scene* createWithScore(int score);
+	OverScene();
+	static cocos2d::Scene* createScene();
+	static OverScene* create();
 	bool init();
 	void setScore(int score){o_score = score;};
 	void writeScore();
 	void readScore();
 	void createBackground();
 	void displayScore();
+	void displayGold();
 	void createMenu_Restart();
 	void createMenu_Rank();
 	//sort prescend

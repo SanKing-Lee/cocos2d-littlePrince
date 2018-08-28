@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cocos2d.h>
+#include "CommonData.h"
 
 typedef enum{
 	HeroOne,
@@ -15,7 +16,9 @@ private:
 	bool h_canMove;
 	bool h_isActive;
 	bool h_isAlive;
-	cocos2d::Point h_vec;
+	int h_level;
+	int h_HPLimit;
+	Point h_vec;
 public:
 	static Hero* create(HeroType type);
 	bool init(HeroType);
@@ -31,6 +34,12 @@ public:
 	bool getAlive(){return h_isAlive;};
 	void setAlive(bool ali){h_isAlive = ali;};
 	void rebirthHero();
+
+	int getLevel() { return h_level;};
+	void setLevel(int lv) { h_level = lv; };
+
+	int getHPLimit() { return h_HPLimit;};
+	void setHPLimit(int l) {h_HPLimit = l;};
 
 	//void displayPH();
 };

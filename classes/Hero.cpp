@@ -19,11 +19,11 @@ bool Hero::init(HeroType type){
 	h_vec = Vect::ZERO;
 	h_type = type;
 	h_isAlive = true;
-	switch(type){
+	h_level = 0;
+	switch(h_type){
 	case HeroOne:
 		this->cocos2d::Sprite::initWithSpriteFrameName("hero1.png");
 		h_hp = HERO_ONE_HP;
-
 		break;
 	default:
 		break;

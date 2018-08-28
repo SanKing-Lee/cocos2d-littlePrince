@@ -4,13 +4,15 @@
 #include <SimpleAudioEngine.h>
 
 GameScene::GameScene(){
-	m_score = 0;
 	m_doubleBulletCount = 0;
 	m_multiBulletCount = 0;
 	m_BombCount = 0;
 	m_EnemySpeedMulti = 1;
 	m_isEnemeySpeedDown = false;
 	m_isProtected = false;
+	m_gold = 0;
+	m_score = 0;
+	data = Dictionary::create();
 }
 
 GameScene* GameScene::create()
@@ -50,13 +52,13 @@ bool GameScene::init()
 	{
 		return false;
 	}
-
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Point origin = Director::getInstance()->getVisibleOrigin();
 	
 	//frame cache
 	createFameCache();
 	Enemy::clearLevelSpeed();
+	readData();
 	//background music
 	playBackgroundMusic();
 
@@ -65,15 +67,16 @@ bool GameScene::init()
 	
 	//display the bombs
 	displayBombs();
+	createGoldLabel();
 
 	//background
 	createBackground();
 
 	//the hero plane
-	createHero(HeroOne);
+	createHero();
 
 	//score
-	displayScore();
+	createScoreLabel();
 
 	//hero hp
 	createHeroHP();
@@ -83,7 +86,6 @@ bool GameScene::init()
 	
 	//update the frame
 	scheduleUpdate();
-
 	return true;
 }
 
@@ -97,6 +99,8 @@ void GameScene::update(float dt)
 	flyEnemys();
 	flyEnemyProp();
 	updateProtect();
+	updateGoldLabel();
+	updateScoreLabel();
     //crash check
 	crashEnemyAndHeroAndBullet();
 	
@@ -159,7 +163,7 @@ void GameScene::createEnemy(EnemyType type) {
     float y = VISIBLE_SIZE.height + enemy->getContentSize().height/2;
     enemy->setPosition(x, y);
     g_enemies.pushBack(enemy);
-    this->addChild(enemy, 0);
+    this->addChild(enemy, ENEMY_LAYOUT);
 }
 
 void GameScene::createSmallEnemy(float) {
@@ -167,7 +171,7 @@ void GameScene::createSmallEnemy(float) {
 }
 
 void GameScene::createMiddleEnemy(float) {
-    this->createEnemy(MIDDLE_ENEMY);
+	createEnemy(MIDDLE_ENEMY);
 }
 
 void GameScene::createBigEnemy(float) {
@@ -296,12 +300,27 @@ void GameScene::bomb(Ref* ref){
 	Audio->playEffect("use_bomb.mp3");
 }
 
-void GameScene::createHero(HeroType htype){
+void GameScene::createHero(){
 	auto bg1 = this->getChildByTag(BG1_TAG);
+	HeroType htype;
+	switch(m_heroLevel ){
+	case 1:
+		htype = HeroOne; break;
+	case 2:
+		htype = HeroTwo; break;
+	case 3:
+		htype = HeroThree; break;
+	default:
+		htype = HeroThree; break;
+	}
 	auto hero = Hero::create(htype);
 	hero->setPositionX(VISIBLE_SIZE.width / 2);
 	hero->setPositionY(VISIBLE_SIZE.height / 6);
 	this->addChild(hero, HERO_LAYOUT, HERO_TAG);
+	hero->setLevel(m_heroLevel);
+	hero->setHP(m_heroHP);
+	hero->setHPLimit(m_heroHPLimit);
+	hero->setLevel(m_heroLevel);
 	hero->fly();
 	hero->touchMove();
 }
@@ -399,7 +418,7 @@ void GameScene::updateBomb(){
 }
 
 
-void GameScene::displayScore()
+void GameScene::createScoreLabel()
 {
 	//the "score" tag
 	auto label = LabelTTF::create("Score:", "Arial", 30);
@@ -408,13 +427,18 @@ void GameScene::displayScore()
 	label->setColor(Color3B::BLACK);
 	this->addChild(label, UI_LAYOUT, 5);
 
-	//the score lable
-	auto scoreLable = Label::createWithBMFont("font.fnt","0");
-	scoreLable->setAnchorPoint(cocos2d::Vect::ANCHOR_TOP_LEFT);
-	scoreLable->setPosition(label-> getContentSize().width + VISIBLE_SIZE.width/10, VISIBLE_SIZE.height-VISIBLE_SIZE.height/10);
-	scoreLable->setColor(Color3B::BLACK);
-	scoreLable->setScale(0.8f);
-	this->addChild(scoreLable, UI_LAYOUT, SL_TAG);
+	//the score Label
+	auto scoreLabel = Label::createWithBMFont("font.fnt","0");
+	scoreLabel->setAnchorPoint(cocos2d::Vect::ANCHOR_TOP_LEFT);
+	scoreLabel->setPosition(label-> getContentSize().width + VISIBLE_SIZE.width/10, VISIBLE_SIZE.height-VISIBLE_SIZE.height/10);
+	scoreLabel->setColor(Color3B::BLACK);
+	scoreLabel->setString(StringUtils::format("%d", m_score));
+	this->addChild(scoreLabel, UI_LAYOUT, SL_TAG);
+}
+
+void GameScene::updateScoreLabel(){
+	auto scoreLabel =(Label*)getChildByTag(SL_TAG);
+	scoreLabel->setString(StringUtils::format("%d", m_score));
 }
 
 void GameScene::createHeroHP(){
@@ -531,17 +555,7 @@ void GameScene::crashEnemyAndHeroAndBullet(){
 			else{
 				if(hero->getHP() <= 1)
 				{
-					hero->setMove(false);
-					hero->setActive(false);
-					hero->setAlive(false);
-					Audio->playEffect("game_over.mp3");
-					auto animation = AnimationCacheInstance->getAnimation("Hero Down");
-					auto animate = Animate::create(animation);
-					auto jumptoOver = CallFunc::create([=](){
-						auto scene = OverScene::createWithScore(this->m_score);
-						Director::getInstance()->replaceScene(scene);
-					});
-					hero->runAction(Sequence::create(animate, jumptoOver, nullptr));
+					GameOver();
 				}
 				else
 					hero->rebirthHero();
@@ -568,8 +582,6 @@ void GameScene::crashEnemyAndHeroAndBullet(){
 				//update the score
 				createPropwhenEnemyDestroyed(enemy);
 				m_score += (enemy)->getScore();
-				//display the socre
-				sl->setString(StringUtils::format("%d", m_score));
                 (enemy)->destroyedAnim((int)(m_score / LEVEL_SCORE));    
 				removableEnemies.pushBack(enemy);	
             }
@@ -622,6 +634,8 @@ void GameScene::crashPropAndHero(){
 					vanishProtect(0.0);
 				createProtect();
 				break;
+			case Gold:
+				m_gold++;
 			default:
 				break;
 			}
@@ -680,4 +694,59 @@ void GameScene::updateProtect(){
 	{
 
 	}
+}
+
+void GameScene::createGoldLabel(){
+	auto goldLabel = Sprite::create("CloseNormal.png");
+	goldLabel->setPosition(goldLabel->getContentSize().width/2, VISIBLE_SIZE.height-goldLabel->getContentSize().height/2);
+	addChild(goldLabel, UI_LAYOUT, GOLD_LABEL_TAG);
+
+	//the score Label
+	auto gold = Label::createWithBMFont("font.fnt","0");
+	gold->setPosition(goldLabel-> getContentSize().width + VISIBLE_SIZE.width/10,  VISIBLE_SIZE.height-goldLabel->getContentSize().height/2);
+	this->addChild(gold, UI_LAYOUT, GOLD_TAG);
+}
+
+void GameScene::updateGoldLabel(){
+	auto gold = (Label*)getChildByTag(GOLD_TAG);
+	gold->setString(StringUtils::format("%d",  m_gold));
+}
+
+void GameScene::readData(){
+	if(UserDefaultInstance->getBoolForKey("isExist", false)){
+		m_score = UserDefaultInstance->getIntegerForKey("Score", 0);
+		m_gold = UserDefaultInstance->getIntegerForKey("Gold", 0);
+		m_BombCount = UserDefaultInstance->getIntegerForKey("Bomb", 0);
+		m_heroHP = UserDefaultInstance->getIntegerForKey("HeroHP", 0);
+		m_heroHPLimit =UserDefaultInstance->getIntegerForKey("HeroHPLimit", 0);
+		m_heroLevel = UserDefaultInstance->getIntegerForKey("HeroLevel", 0);
+		m_isProtected =UserDefaultInstance->getBoolForKey("ProtectedCover", false);
+	}
+}
+
+void GameScene::GameOver(){
+	auto hero = (Hero*) getChildByTag(HERO_TAG);
+	hero->setMove(false);
+	hero->setActive(false);
+	hero->setAlive(false);
+	Audio->playEffect("game_over.mp3");
+	auto animation = AnimationCacheInstance->getAnimation("Hero Down");
+	auto animate = Animate::create(animation);
+	auto jumptoOver = CallFunc::create([=](){
+		auto scene = OverScene::createScene();
+		Director::getInstance()->replaceScene(scene);
+	});
+	writeData();
+	hero->runAction(Sequence::create(animate, jumptoOver, nullptr));
+}
+
+//write the 
+void GameScene::writeData(){
+	UserDefaultInstance->setIntegerForKey("Score", m_score);
+	UserDefaultInstance->setIntegerForKey("Gold", m_gold);
+	UserDefaultInstance->setIntegerForKey("Bomb", m_BombCount);
+	UserDefaultInstance->setIntegerForKey("HeroHP", m_heroHP);
+	UserDefaultInstance->setIntegerForKey("HeroHPLimit", m_heroHPLimit);
+	UserDefaultInstance->setIntegerForKey("HeroLevel", m_heroLevel);
+	UserDefaultInstance->setBoolForKey("ProtectCover", m_isProtected);
 }

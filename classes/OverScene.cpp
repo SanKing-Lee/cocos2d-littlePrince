@@ -6,12 +6,11 @@
 
 USING_NS_CC;
 
-OverScene::OverScene(int score){
-	o_score = score;
+OverScene::OverScene(){
 }
 
-OverScene* OverScene::create(int score){
-	auto pp = new OverScene(score);
+OverScene* OverScene::create(){
+	auto pp = new OverScene();
 	if(pp && pp->init())
 	{
 		pp->autorelease();
@@ -25,11 +24,11 @@ OverScene* OverScene::create(int score){
 	}
 }
 
-cocos2d::Scene* OverScene::createWithScore(int score){
-	auto scene = cocos2d::Scene::create();
+Scene* OverScene::createScene(){
+	auto scene = Scene::create();
 
 	//"layer" is an autorelease object
-	auto layer = OverScene::create(score);
+	auto layer = OverScene::create();
 
 	// add layer as a child to scene
 	scene->addChild(layer);
@@ -38,14 +37,14 @@ cocos2d::Scene* OverScene::createWithScore(int score){
 	return scene;
 }
 
-
-
 bool OverScene::init(){
 	//background
 	createBackground();
 
 	//score
+	readScore();
 	displayScore();
+	displayGold();
 
 	//Restart
 	createMenu_Restart();
@@ -62,7 +61,9 @@ void OverScene::writeScore(){
 		for(int i = 1; i <= scores.size(); i++){
 			UserDefaultInstance->setIntegerForKey(StringUtils::format("score_%dth", i).c_str(), scores.at(i-1));
 		}
+		scores.clear();
 	}
+
 	else {
 		log("Write scores failed");
 	}
@@ -76,6 +77,8 @@ void OverScene::readScore(){
 				(StringUtils::format("score_%dth", i).c_str(), 0)
 			);
 		}
+		o_score = UserDefaultInstance->getIntegerForKey("Score", 0);
+		scores.push_back(o_score);
 	}
 	//xml not exists
 	else{
@@ -94,16 +97,13 @@ void OverScene::createBackground(){
 }
 
 void OverScene::displayScore(){
-	auto scoreLable = Label::createWithBMFont("font.fnt","0");
-	scoreLable->setAnchorPoint(cocos2d::Vect::ANCHOR_MIDDLE);
-	scoreLable->setPosition(VISIBLE_SIZE.width / 2, VISIBLE_SIZE.height / 3);
-	scoreLable->setColor(Color3B::BLACK);
-	scoreLable->setScale(0.8);
-	scoreLable->setString(StringUtils::format("%d", o_score));
-	this->addChild(scoreLable, UI_LAYOUT, FINALSCORELABEL_TAG);
-
-	readScore();
-	scores.push_back(o_score);
+	auto scoreLabel = Label::createWithBMFont("font.fnt","0");
+	scoreLabel->setAnchorPoint(cocos2d::Vect::ANCHOR_MIDDLE);
+	scoreLabel->setPosition(VISIBLE_SIZE.width / 2, VISIBLE_SIZE.height / 3);
+	scoreLabel->setColor(Color3B::BLACK);
+	scoreLabel->setScale(0.8);
+	scoreLabel->setString(StringUtils::format("%d", o_score));
+	this->addChild(scoreLabel, UI_LAYOUT, FINALSCORELABEL_TAG);
 	std::sort(std::begin(scores), std::end(scores), std::greater<int>());
 	while(scores.size() > MAX_RANK)
 	{ 
@@ -116,9 +116,22 @@ void OverScene::displayScore(){
 	writeScore();
 }
 
+void OverScene::displayGold(){
+	auto goldLabel = Sprite::create("CloseNormal.png");
+	goldLabel->setPosition(goldLabel->getContentSize().width/2, VISIBLE_SIZE.height-goldLabel->getContentSize().height/2);
+	addChild(goldLabel, UI_LAYOUT, GOLD_LABEL_TAG);
+
+	//the score Label
+	auto gold = Label::createWithBMFont("font.fnt","0");
+	gold->setPosition(goldLabel-> getContentSize().width + VISIBLE_SIZE.width/10,  VISIBLE_SIZE.height-goldLabel->getContentSize().height/2);
+	//gold->setString(StringUtils::format("%d", GameScene::getGold()));
+	this->addChild(gold, UI_LAYOUT, GOLD_TAG);
+}
+
 void OverScene::createMenu_Restart(){
 	auto spRestart = Sprite::createWithSpriteFrameName("btn_finish.png");
 	auto itemRestart = MenuItemSprite::create(spRestart, spRestart, [](Ref *) {
+		LoadingScene::initData();
 		auto scene = GameScene::createScene();
 		Director::getInstance()->replaceScene(scene);
 	});
@@ -132,7 +145,7 @@ void OverScene::createMenu_Rank(){
 	auto spRank = Sprite::create("Rank3.png");
 	auto itemRank = MenuItemSprite::create(spRank, spRank, [](Ref*){
 		auto rankScene = RankScene::createScene();
-		Director::getInstance()->replaceScene(rankScene);
+		Director::getInstance()->pushScene(rankScene);
 	});
 	auto menuRank = Menu::create();
 	menuRank->addChild(itemRank, UI_LAYOUT, RANK_TAG);

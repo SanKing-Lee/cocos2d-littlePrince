@@ -21,6 +21,10 @@
 #define RANKNAME_TAG 15
 #define HEROPH_TAG 16
 #define COVER_TAG 17
+#define GOLD_LABEL_TAG 18
+#define GOLD_TAG 19
+#define RETURN_TAG 20
+#define RETURNMENU_TAG 21
 
 //layout
 #define BG_LAYOUT -1
@@ -49,10 +53,11 @@
 //delay
 #define HIT_DELAY 0.2f
 #define DOWN_DELAY 0.1f
-#define HERO_DOWN_DELAY 0.2f
+#define HERO_DOWN_DELAY 0.1f
 #define ENEMY_SPEED_REGAIN_DELAY 2
+#define STAR_TWINKLE_DELAY 0.1f
 
-//score lable off
+//score Label off
 #define SL_XOFF 20
 #define SL_YOFF 20
 
@@ -81,8 +86,9 @@
 #define DOUBLEBULLET_QUANTITY 100
 #define TRIBULLET_QUANTITY 30
 
-#define MAX_RANK 8
+#define MAX_RANK 3
 #define PROPTYPENUMBER 6
+#define SHOPITEMS 6
 
 //hero
 #define HERO_ONE_HP 3

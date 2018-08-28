@@ -15,11 +15,17 @@ public:
 	static GameScene* create();
 	bool init();
 	void update(float dt);
-
+	Dictionary* data;
+	//Vector<String> dataItemNames;
 private:
 	//member vraibles
 	//score
+	int m_heroHPLimit;
+	int m_heroHP;
+	int m_heroLevel;
 	int m_score;
+	//gold
+	int m_gold;
 	//the number of double-bullets
 	int m_doubleBulletCount;
 	//the number of multi-bullets
@@ -31,6 +37,8 @@ private:
 	float m_EnemySpeedMulti;
 	bool m_isProtected;
 
+	void readData();
+	void writeData();
 
 	//bullet
 	//sum of bulltes created
@@ -59,7 +67,7 @@ private:
 	void createPropwhenEnemyDestroyed(Enemy* enemy);
 
 	//create hero
-	void createHero(HeroType htype);
+	void createHero();
 	Vector<Sprite*> hero_hp;
 
 	//create all the sprites above with schedule
@@ -77,12 +85,16 @@ private:
 	void playBackgroundMusic();
 
 	void createHeroHP();
+	void updateHeroHP();
 
 	void displayBombs();
-	void displayScore();
-
-	void updateHeroHP();
 	void updateBomb();
+
+	void createScoreLabel();
+	void updateScoreLabel();
+	void createGoldLabel();
+	void updateGoldLabel();
+
 
 	//enemy speed down
 	void downEnemySpeed();
@@ -102,5 +114,7 @@ private:
 	//crash check
 	void crashEnemyAndHeroAndBullet();
 	void crashPropAndHero();
+
+	void GameOver();
 };
 #endif
