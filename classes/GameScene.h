@@ -5,6 +5,9 @@
 #include "Bullet.h"
 #include "Prop.h"
 #include "Hero.h"
+#include "OverScene.h"
+#include "GameStoreScene.h"
+#include "SuccessScene.h"
 
 USING_NS_CC;
 
@@ -20,6 +23,8 @@ public:
 private:
 	//member vraibles
 	//score
+	Point e_smallGroupPosition;
+	int m_GameLevel;
 	int m_heroHPLimit;
 	int m_heroHP;
 	int m_heroLevel;
@@ -35,7 +40,12 @@ private:
 	//whether down enemy speed
 	bool m_isEnemeySpeedDown;
 	float m_EnemySpeedMulti;
+	bool m_isBossScene;
 	bool m_isProtected;
+	int isCallenemy;
+	bool isGoThrough;
+	bool isBossDie;
+	bool removeEnemy;
 
 	void readData();
 	void writeData();
@@ -50,13 +60,60 @@ private:
 	void createDoubleBullet();
 	void createMultiBullet();
 
+	
+	Vector<Bullet*> e_bullets;
+	Vector<Bullet*> e_left_bullets;
+	Vector<Bullet*> e_right_bullets;
+	Vector<Bullet*> e_track_bullets;
+	Vector<Bullet*> e_Fort_bullets;
+	Vector<Bullet*> e_Big_bullets;
+
+	Vector<Bullet*> removableBullets_e1;
+	Vector<Bullet*> removableBullets_e2;
+	Vector<Bullet*> removableBullets_e3;
+	Vector<Bullet*> removableBullets_e4;
+	Vector<Bullet*> removableBullets_e5;
+	Vector<Bullet*> removableBullets_e6;
+
+	void createEnemysingleBullet(float);
+	void createEnemytribleBullet(float);
+	void createEnemytrackBullet(float);
+	void createEnemyFortBullet(float);
+	void createEnemyBigBullet(float);
+	//zqh add skill
+	void callLittleEnemy(Enemy*);
+	//collision detection
+	void collisionDetection(Hero*,Bullet*,Vector<Bullet*>&);
+
+	void clearCrossBullet(Vector<Bullet*>&,Vector<Bullet*>&);
+	//
+
 	//enemy
     Vector<Enemy*> g_enemies; 
 	Vector<Enemy*> removableEnemies;
+	Vector<Enemy*> little_enemies;
     void createSmallEnemy(float);
     void createMiddleEnemy(float);
     void createBigEnemy(float);
     void createEnemy(EnemyType);
+	void createTrackEnemy(float);
+	void trackEnemyMove(Enemy*);
+	void createMeteoriteEnemy(float);
+	void createFortEnemy(float);
+	void createFirstBossEnemy(float);
+	void createSecondBossEnemy(float);
+	void createThirdBossEnemy(float);
+
+    void createSmallEnemy1(float);
+	void createSmallEnemy2(float);
+	void createSmallEnemy2Group(float);
+	void createEnemy(EnemyType, Point);
+	//add zqh 
+	void setisCallEnemy(int count) { isCallenemy = count; };
+	int getisCallEnemy() { return isCallenemy; };
+	void cleartrackBullet(float);
+	void crashEnemybulletAndHero();
+	//
 
 	//create prop
 	Vector<Prop*> h_props;
@@ -92,8 +149,11 @@ private:
 
 	void createScoreLabel();
 	void updateScoreLabel();
+
 	void createGoldLabel();
 	void updateGoldLabel();
+
+	void updateSpeed();
 
 
 	//enemy speed down
@@ -115,6 +175,12 @@ private:
 	void crashEnemyAndHeroAndBullet();
 	void crashPropAndHero();
 
+	//boss
+	bool canCreateBoss();
+	void createBoss();
 	void GameOver();
+	void jumpToBoss();
+
+	void goThrough();
 };
 #endif

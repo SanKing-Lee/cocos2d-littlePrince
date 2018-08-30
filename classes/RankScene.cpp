@@ -42,7 +42,7 @@ cocos2d::Scene* RankScene::createScene(){
 bool RankScene::init(){
 	//background
 	createBackground();
-
+	Audio->playBackgroundMusic("gameover_bk.mp3");
 	//Restart
 	createMenu_Back2Over();
 
@@ -54,9 +54,9 @@ bool RankScene::init(){
 
 
 void RankScene::readScore(){
-	if(UserDefaultInstance->getBoolForKey("isExist", false)){
-		for( int i = 1; i <= UserDefaultInstance->getIntegerForKey("ScoreNumbers", 0); i++){
-			r_scores.push_back( UserDefaultInstance->getIntegerForKey
+	if(MyUserDefault->getBoolForKey("isExist", false)){
+		for( int i = 1; i <= MyUserDefault->getIntegerForKey("ScoreNumbers", 0); i++){
+			r_scores.push_back( MyUserDefault->getIntegerForKey
 				(StringUtils::format("score_%dth", i).c_str(), 0)
 			);
 		}
@@ -66,14 +66,14 @@ void RankScene::readScore(){
 void RankScene::createBackground(){
 	auto bg = Sprite::createWithSpriteFrameName("level_list_background.png");
 	bg->setAnchorPoint(Point::ANCHOR_TOP_LEFT);
-	bg->setPosition(0, VISIBLE_SIZE.height);
+	bg->setPosition(0, VisSize.height);
 	this->addChild(bg, BG1_TAG);
 
 
 	auto star = Sprite::create();
-	star->setPosition(Point(VISIBLE_SIZE.width/2,VISIBLE_SIZE.height/40*33));
-	addChild(star,UI_LAYOUT);
-	star->runAction(Animate::create(AnimationCacheInstance->getAnimation("star twinkle")));
+	star->setPosition(Point(VisSize.width/2,VisSize.height/40*33));
+	addChild(star,UI_LAYER);
+	star->runAction(Animate::create(MyAnimationCache->getAnimation("star twinkle")));
 }
 
 void RankScene::createMenu_Back2Over(){
@@ -84,20 +84,20 @@ void RankScene::createMenu_Back2Over(){
 		Director::getInstance()->replaceScene(scene);
 	});
 	auto r_menuRestart = Menu::create();
-	r_menuRestart->addChild(itemBack, UI_LAYOUT, RESTART_TAG);
-	r_menuRestart->setPosition(VISIBLE_SIZE.width-80, 40);
-	this->addChild(r_menuRestart, UI_LAYOUT, RESTARTMENU_TAG);
+	r_menuRestart->addChild(itemBack, UI_LAYER, RESTART_TAG);
+	r_menuRestart->setPosition(VisSize.width-80, 40);
+	this->addChild(r_menuRestart, UI_LAYER, RESTARTMENU_TAG);
 }
 
 void RankScene::displayRank(){
 	auto str = StringUtils::format("%d\n\n\n\n", r_scores.at(0));
-	for(int i = 1; i < MIN(r_scores.size(), MAX_RANK); i++)
+	for(int i = 1; i < MIN(r_scores.size(), MAX_RANK_NUMBER); i++)
 	{
 		str += StringUtils::format("%d\n\n\n\n", r_scores.at(i)); 
 	}
 	auto score2 = Label::createWithBMFont("font.fnt","0");
 	score2->setString(str);
 	score2->setAnchorPoint(Vect::ANCHOR_TOP_LEFT);
-	score2->setPosition(VISIBLE_SIZE.width/5*2, VISIBLE_SIZE.height/40*29);
-	this->addChild(score2, UI_LAYOUT);
+	score2->setPosition(VisSize.width/5*2, VisSize.height/40*29);
+	this->addChild(score2, UI_LAYER);
 }

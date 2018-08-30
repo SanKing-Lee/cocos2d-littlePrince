@@ -19,14 +19,40 @@ bool Bullet::init(BulletType type){
 	case SingleBullet:
 		Sprite::initWithSpriteFrameName ("bullet1.png");
 		b_attack = BULLET1_ATTACK;
-		b_speed = BULLETS_SPEED;
+		b_speed = SP_HERO_BULLET;
 		break;
 	case DoubleBullet:
 	case MultiBullet:
 		Sprite::initWithSpriteFrameName("bullet2.png");
 		b_attack = BULLET2_ATTACK;
-		b_speed = BULLETS_SPEED;
+		b_speed = SP_HERO_BULLET;
 		break;
+	case BossSingleBUllet:
+		Sprite::initWithSpriteFrameName("bossSingleBullet.png");
+		b_attack = BULLET2_ATTACK;
+		b_speed = SP_ENEMY_BULLET;
+		break;
+	case BossDoubleBullet:
+		Sprite::initWithSpriteFrameName("bossDoubleBullet.png");
+		b_attack = BULLET2_ATTACK;
+		b_speed = SP_ENEMY_BULLET;
+		break;
+	case EnemyNormalBUllet:
+		Sprite::initWithSpriteFrameName("enemyNormalBUllet.png");
+		b_attack = BULLET2_ATTACK;
+		b_speed = SP_ENEMY_BULLET;
+		break;
+	case EnemyTrackBullet:
+		Sprite::initWithSpriteFrameName("enemyTrackBullet.png");
+		b_attack = BULLET2_ATTACK;
+		b_speed = SP_ENEMY_BULLET;
+		break;
+	case EnemyBigBullet:
+		Sprite::initWithSpriteFrameName("bossSupperBullet.png");
+		b_attack = BULLET2_ATTACK;
+		b_speed = SP_ENEMY_BULLET;
+		break;
+
 	default:
 		break;
 	}

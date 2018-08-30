@@ -29,6 +29,14 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	cocos2d::FileUtils::getInstance()->addSearchPath("ui");
 	cocos2d::FileUtils::getInstance()->addSearchPath("font");
 	cocos2d::FileUtils::getInstance()->addSearchPath("sound");
+	cocos2d::FileUtils::getInstance()->addSearchPath("ShopScene");
+	cocos2d::FileUtils::getInstance()->addSearchPath("background");
+	cocos2d::FileUtils::getInstance()->addSearchPath("bullet");
+	cocos2d::FileUtils::getInstance()->addSearchPath("button");
+	cocos2d::FileUtils::getInstance()->addSearchPath("heroAndEnemy");
+	cocos2d::FileUtils::getInstance()->addSearchPath("Loading");
+	cocos2d::FileUtils::getInstance()->addSearchPath("tool");
+	cocos2d::FileUtils::getInstance()->addSearchPath("Music");
 
     // turn on display FPS
     director->setDisplayStats(false);

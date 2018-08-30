@@ -1,6 +1,7 @@
 #pragma once
 #include <cocos2d.h>
 #include "Hero.h"
+#include "GameBegin.h"
 
 class LoadingScene:public cocos2d::Layer{
 public:
@@ -15,6 +16,6 @@ public:
 	void createBackground();
 	void createHero(HeroType htype);
 	void createLoadingAnimation();
+	void update(float);
 private:
-
 };

@@ -5,6 +5,11 @@
 #include <vector>
 #include <algorithm>
 #include "LoadingScene.h"
+#include "CommonData.h"
+#include "GameBegin.h"
+#include "GameScene.h"
+#include <SimpleAudioEngine.h>
+#include "RankScene.h"
 
 class OverScene: public cocos2d::Layer{
 public:
@@ -20,8 +25,12 @@ public:
 	void displayGold();
 	void createMenu_Restart();
 	void createMenu_Rank();
+	void createMenu_Return2MainMenu();
+	void createMenu_Quit();
+	void gameQuitCallback(Ref* pSender);
 	//sort prescend
 private:
 	int o_score;
+	int o_gold;
 	std::vector<int> scores;
 };

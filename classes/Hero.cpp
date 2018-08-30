@@ -20,12 +20,19 @@ bool Hero::init(HeroType type){
 	h_type = type;
 	h_isAlive = true;
 	h_level = 0;
+	h_hp = HERO_ONE_HP;
 	switch(h_type){
 	case HeroOne:
-		this->cocos2d::Sprite::initWithSpriteFrameName("hero1.png");
-		h_hp = HERO_ONE_HP;
+		this->cocos2d::Sprite::initWithFile("hero1_n1.png");
+		break;
+	case HeroTwo:
+		this->cocos2d::Sprite::initWithFile("hero2_n1.png");
+		break;
+	case HeroThree:
+		this->cocos2d::Sprite::initWithFile("Hero3_n1.png");
 		break;
 	default:
+		this->cocos2d::Sprite::initWithFile("Hero3_n1.png");
 		break;
 	//set the position
 	return true;
@@ -33,7 +40,13 @@ bool Hero::init(HeroType type){
 }
 
 void Hero::fly(){
-	auto animation = AnimationCacheInstance->getAnimation("Hero Fly");
+	Animation* animation;
+	switch(h_level){
+	case 1: animation = MyAnimationCache->getAnimation("Hero1 Fly"); break;
+	case 2:	animation = MyAnimationCache->getAnimation("Hero2 Fly"); break;
+	case 3:	animation = MyAnimationCache->getAnimation("Hero3 Fly"); break;
+	default: animation = MyAnimationCache->getAnimation("Hero3 Fly"); break;
+	}
 	auto animate = cocos2d::Animate::create(animation);
 	this->runAction(animate);
 }
@@ -73,23 +86,45 @@ void Hero::touchMove(){
 }
 
 void Hero::down(){
-	auto animation = AnimationCacheInstance->getAnimation("Hero Down");
+	auto animation = Animation::create();
+	//switch(h_type){
+	//case HeroOne:
+		animation = MyAnimationCache->getAnimation("Hero1 Down");
+	//case HeroTwo:
+	//	animation = MyAnimationCache->getAnimation("Hero2 Down"); break;
+	//case HeroThree:
+	//	animation = MyAnimationCache->getAnimation("Hero3 Down"); break;
+	//default:
+	//	animation = MyAnimationCache->getAnimation("Hero3 Down"); break;
+	//}
     auto animate = cocos2d::Animate::create(animation);
 	this->runAction(animate);
 }
 
-void Hero::rebirthHero(){
+void Hero::rebirthHero(int isBossDie){
 	h_hp--;
 	auto stopHero = cocos2d::CallFunc::create([=](){
 		setActive(false);
 		setMove(false);
 		h_isAlive = false;
 	});
-	auto animation = AnimationCacheInstance->getAnimation("Hero Down");
+	if(isBossDie)
+		return;
+	auto animation = MyAnimationCache->getAnimation("Hero1 Down");
+	//switch(h_type){
+	////case HeroOne:
+	//	animation = MyAnimationCache->getAnimation("Hero1 Down");
+	//case HeroTwo:
+	//	animation = MyAnimationCache->getAnimation("Hero2 Down"); break;
+	//case HeroThree:
+	//	animation = MyAnimationCache->getAnimation("Hero3 Down"); break;
+	//default:
+	//	animation = MyAnimationCache->getAnimation("Hero3 Down"); break;
+	//}
 	auto animate = cocos2d::Animate::create(animation);
 	auto getBack = cocos2d::CallFunc::create([=](){
-		setPositionX(VISIBLE_SIZE.width / 2);
-		setPositionY(VISIBLE_SIZE.height / 8);
+		setPositionX(VisSize.width / 2);
+		setPositionY(VisSize.height / 8);
 	});
 	auto activeHero = cocos2d::CallFunc::create([=](){
 		setActive(true);

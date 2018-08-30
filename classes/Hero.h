@@ -33,7 +33,7 @@ public:
 
 	bool getAlive(){return h_isAlive;};
 	void setAlive(bool ali){h_isAlive = ali;};
-	void rebirthHero();
+	void rebirthHero(int);
 
 	int getLevel() { return h_level;};
 	void setLevel(int lv) { h_level = lv; };

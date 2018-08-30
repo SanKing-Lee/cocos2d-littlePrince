@@ -6,7 +6,12 @@
 typedef enum{
 	SingleBullet,
 	DoubleBullet,
-	MultiBullet
+	MultiBullet,
+	BossSingleBUllet,
+	BossDoubleBullet,
+	EnemyNormalBUllet,
+	EnemyTrackBullet,
+	EnemyBigBullet
 } BulletType;
 
 class Bullet: public cocos2d::Sprite{

@@ -19,22 +19,22 @@ bool Prop::init(PropType type){
 	p_type = type;
 	switch(type){
 	case  Enhance_Bullet:
-		Sprite::initWithSpriteFrameName("ufo1.png");
+		Sprite::initWithSpriteFrameName("double_bullet.png");
 		break;
 	case Bomb:
-		Sprite::initWithSpriteFrameName("ufo2.png");
+		Sprite::initWithSpriteFrameName("clear_up.png");
 		break;
 	case Hp:
-		Sprite::initWithFile("propHP.png");
+		Sprite::initWithFile("hp_up.png");
 		break;
 	case Gold:
-		Sprite::initWithFile("CloseNormal.png");
+		Sprite::initWithFile("money.png");
 		break;
 	case ProtectCover:
-		Sprite::initWithFile("CloseSelected.png");
+		Sprite::initWithFile("protective.png");
 		break;
 	case SpeedDown:
-		Sprite::initWithFile("Rank.png");
+		Sprite::initWithFile("freeze.png");
 		break;
 	default:
 		break;
